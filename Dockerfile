@@ -105,11 +105,12 @@ RUN curl -L https://github.com/docker/machine/releases/download/${DOCKER_MACHINE
 RUN wget --no-cookies \
 --no-check-certificate \
 --header "Cookie: oraclelicense=accept-securebackup-cookie" \
-"http://download.oracle.com/otn-pub/java/jdk/9.0.4+11/c2514751926b4512b076cc82f959763f/jdk-9.0.4_linux-x64_bin.rpm" -O /tmp/jdk-9.0.4_linux-x64_bin.rpm
+"http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm" -O /tmp/jdk-8u161-linux-x64.rpm
+
 #Using variables
 #RUN yum -y install /tmp/jdk-${JAVA_MAJOR_VERSION}-linux-x64.rpm
 #Not using variables
-RUN yum -y install /tmp/jdk-9.0.4_linux-x64_bin.rpm
+RUN yum -y install /tmp/jdk-8u161-linux-x64.rpm
 
 RUN alternatives --install /usr/bin/java jar ${JAVA_HOME}/bin/java 200000
 RUN alternatives --install /usr/bin/javaws javaws ${JAVA_HOME}/bin/javaws 200000

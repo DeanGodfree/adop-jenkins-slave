@@ -104,13 +104,12 @@ RUN curl -L https://github.com/docker/machine/releases/download/${DOCKER_MACHINE
 #Not using variables
 #RUN wget --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' 'http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm' -O /tmp/jdk-8-linux-x64.rpm
 
-RUN URL=$(curl -s https://lv.binarybabel.org/catalog-api/java/jdk8.txt?p=downloads.tgz)
-RUN cd /opt; curl -LOH 'Cookie: oraclelicense=accept-securebackup-cookie' "${URL}"
+RUN export URL=$(curl -s https://lv.binarybabel.org/catalog-api/java/jdk8.txt?p=downloads.tgz);cd /opt; curl -LOH 'Cookie: oraclelicense=accept-securebackup-cookie' "${URL}"
 RUN cd /opt;gunzip $JDK_VERSION.tar.gz
 RUN cd /opt;tar xvf $JDK_VERSION.tar
-RUN alternatives --install /usr/bin/java java /opt/$JDK_DIR/bin/java 2
+RUN alternatives --install /usr/bin/java java /opt/$JDK_VERSION/bin/java 2
 
-ENV JAVA_HOME /opt/$JDK_DIR
+ENV JAVA_HOME /opt/$JDK_VERSION
 
 ENV PATH=$PATH;$JAVA_HOME/bin
 

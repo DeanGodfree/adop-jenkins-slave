@@ -2,6 +2,7 @@ FROM centos:centos7
 MAINTAINER "Nick Griffin" <nicholas.griffin@accenture.com>
 
 # Java Env Variables
+ENV JDK_VERSION=jdk-8u171-linux-x64
 ENV JAVA_VERSION=8u161
 ENV JAVA_MAJOR_VERSION=8
 ENV JAVA_BUILD_VERSION=b12
@@ -102,19 +103,30 @@ RUN curl -L https://github.com/docker/machine/releases/download/${DOCKER_MACHINE
 #RUN wget --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' 'http://download.oracle.com/otn-pub/java/jdk/${JAVA_VERSION}-${JAVA_BUILD_VERSION}/${JAVA_HASH}/jdk-${JAVA_VERSION}-linux-x64.rpm' -O /tmp/jdk-${JAVA_MAJOR_VERSION}-linux-x64.rpm
 #Not using variables
 #RUN wget --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' 'http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm' -O /tmp/jdk-8-linux-x64.rpm
-RUN wget --no-cookies \
---no-check-certificate \
---header "Cookie: oraclelicense=accept-securebackup-cookie" \
-"http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm" -O /tmp/jdk-8u161-linux-x64.rpm
+
+RUN URL=$(curl -s https://lv.binarybabel.org/catalog-api/java/jdk8.txt?p=downloads.tgz)
+RUN cd /opt; curl -LOH 'Cookie: oraclelicense=accept-securebackup-cookie' "${URL}"
+RUN cd /opt;gunzip $JDK_VERSION.tar.gz
+RUN cd /opt;tar xvf $JDK_VERSION.tar
+RUN alternatives --install /usr/bin/java java /opt/$JDK_DIR/bin/java 2
+
+ENV JAVA_HOME /opt/$JDK_DIR
+
+ENV PATH=$PATH;$JAVA_HOME/bin
+
+#RUN wget --no-cookies \
+#--no-check-certificate \
+#--header "Cookie: oraclelicense=accept-securebackup-cookie" \
+#"http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm" -O /tmp/jdk-8u161-linux-x64.rpm
 
 #Using variables
 #RUN yum -y install /tmp/jdk-${JAVA_MAJOR_VERSION}-linux-x64.rpm
 #Not using variables
-RUN yum -y install /tmp/jdk-8u161-linux-x64.rpm
+#RUN yum -y install /tmp/jdk-8u161-linux-x64.rpm
 
-RUN alternatives --install /usr/bin/java jar ${JAVA_HOME}/bin/java 200000
-RUN alternatives --install /usr/bin/javaws javaws ${JAVA_HOME}/bin/javaws 200000
-RUN alternatives --install /usr/bin/javac javac ${JAVA_HOME}/bin/javac 200000
+#RUN alternatives --install /usr/bin/java jar ${JAVA_HOME}/bin/java 200000
+#RUN alternatives --install /usr/bin/javaws javaws ${JAVA_HOME}/bin/javaws 200000
+#RUN alternatives --install /usr/bin/javac javac ${JAVA_HOME}/bin/javac 200000
 
 RUN yum clean all
 RUN rm -rf /var/cache/yum && rm -rf /tmp/* && rm -rf /var/log/*

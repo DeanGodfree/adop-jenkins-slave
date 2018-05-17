@@ -3,10 +3,10 @@ MAINTAINER "Nick Griffin" <nicholas.griffin@accenture.com>
 
 # Java Env Variables
 ENV JDK_VERSION=jdk-8u171-linux-x64
-ENV JAVA_VERSION=8u161
-ENV JAVA_MAJOR_VERSION=8
-ENV JAVA_BUILD_VERSION=b12
-ENV JAVA_HASH=2f38c3b165be4555a1fa6e98c45e0808
+ENV JAVA_VERSION=jdk1.8.0_171
+#ENV JAVA_MAJOR_VERSION=8
+#ENV JAVA_BUILD_VERSION=b12
+#ENV JAVA_HASH=2f38c3b165be4555a1fa6e98c45e0808
 ENV JAVA_HOME=/usr/java/latest
 ENV PATH=$PATH:${JAVA_HOME}/bin
 
@@ -107,9 +107,9 @@ RUN curl -L https://github.com/docker/machine/releases/download/${DOCKER_MACHINE
 RUN export URL=$(curl -s https://lv.binarybabel.org/catalog-api/java/jdk8.txt?p=downloads.tgz);cd /opt; curl -LOH 'Cookie: oraclelicense=accept-securebackup-cookie' "${URL}"
 RUN cd /opt;gunzip $JDK_VERSION.tar.gz
 RUN cd /opt;tar xvf $JDK_VERSION.tar
-RUN alternatives --install /usr/bin/java java /opt/$JDK_VERSION/bin/java 2
+RUN alternatives --install /usr/bin/java java /opt/$JAVA_VERSION/bin/java 2
 
-ENV JAVA_HOME /opt/$JDK_VERSION
+ENV JAVA_HOME /opt/$JAVA_VERSION
 
 ENV PATH=$PATH;$JAVA_HOME/bin
 
